@@ -1,0 +1,16 @@
+# The base accumulo image to use for all components.
+imagePullPolicy: Always
+proxy:
+  image: public.ecr.aws/o1d3y8h1/accumulo-proxy:2.1.0
+  name: python-client
+  replicas: 3
+  username: "root"
+  passwd: "root"
+  port: 42424
+  instance_name: "test"
+zookeeper:
+  host: "zookeeper-0.zookeeper-headless.accumulo.svc.cluster.local:2181"
+  port: 2181
+  containerPort: 2888
+  electionPort: 3888
+  replicas: 3

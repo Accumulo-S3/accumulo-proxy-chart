@@ -1,0 +1,13 @@
+apiVersion: v1
+description: Helm chart to deploy an accumulo proxy
+name: accumulo-proxy
+version: 1.0.0
+appVersion: 2.7.3
+name.version: 2.1.0
+home: https://hadoop.apache.org/
+sources:
+- https://github.com/apache/hadoop
+icon: http://hadoop.apache.org/images/hadoop-logo.jpg
+maintainers:
+- name: Chris Bevard
+  email: cbevard1@gmail.com

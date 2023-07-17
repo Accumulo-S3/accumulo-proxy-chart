@@ -1,0 +1,45 @@
+{{- $fullName := include "accumulo.fullname" . }}
+{{- $replicaCount := .Values.proxy.replicas | int }}
+{{- $root := . }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.proxy.name }}-proxy
+  labels:
+    app: {{ .Values.proxy.name }}
+    chart: {{ $root.Chart.Name }}-{{ $root.Chart.Version | replace "+" "_" }}
+    release: {{ $root.Release.Name }}
+    heritage: {{ $root.Release.Service }}
+    pod: {{ .Values.proxy.name }}-proxy
+    component: {{ $fullName }}-proxy
+spec:
+  replicas: {{ .Values.proxy.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.proxy.name }}
+      component: {{ .Values.proxy.name }}-proxy
+  serviceName: {{ .Values.proxy.name }}-proxy
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.proxy.name }}
+        release: {{ .Release.Name }}
+        component: {{ .Values.proxy.name }}-proxy
+    spec:
+      containers:
+        - name: accumulo-proxy
+          image: {{ $root.Values.proxy.image }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          command:
+            - "/opt/accumulo-proxy/bin/accumulo-proxy"
+            - "-p"
+            - "/tmp/accumulo-config/proxy.properties"
+          volumeMounts:
+            - name: accumulo-config
+              mountPath: /tmp/accumulo-config
+      volumes:
+        - name: accumulo-config
+          configMap:
+            name: accumulo-proxy-configmap
+            defaultMode: 0777
+---
